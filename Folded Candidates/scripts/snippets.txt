@@ -1,0 +1,3 @@
+prefix = 'bbl'; mapped_atoms = map_vtf_coordinates([prefix '_trajectories/' prefix '_0.vtf'], [prefix '.pdb']); save([prefix '_mapped_atoms.mat'], 'mapped_atoms')
+
+for i = 0:27; convert_vtf_to_mat(['bbl_trajectories/bbl_' num2str(i) '.vtf']); end
