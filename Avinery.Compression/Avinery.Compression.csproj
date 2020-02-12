@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Platforms>AnyCPU;x64;x86</Platforms>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutputPath></OutputPath>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\7ZipC\7ZipC.vcxproj" />
+    <ProjectReference Include="..\7ZipLZMA_C_DotNetWrapper\7ZipLZMA_C_DotNetWrapper.vcxproj" />
+  </ItemGroup>
+
+</Project>
