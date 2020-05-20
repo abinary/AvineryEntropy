@@ -6,10 +6,9 @@ using System.Text;
 
 namespace Avinery.Sim
 {
-    public class IdealPolymerMC : MCBase
+    public class IdealChainMC : MCBase
     {
         public double R { get; private set; }
-        public double StepSize { get; set; }
         public int N { get; set; }
         public double PullForce { get; set; }
 
@@ -19,7 +18,7 @@ namespace Avinery.Sim
         public bool IsEdgeMoveLimitedToEnd { get; set; }
         public double ProbabilityOfMovingEdges { get; set; }
 
-        public double MaximalExtension => (N - 1)*StepSize;
+        public double MaximalExtension => (N - 1);
 
         private Vec2d[] _configuration;
 
@@ -36,7 +35,7 @@ namespace Avinery.Sim
 
         public double[,] ConfigurationMatrix { get { return _configuration.ToDoubleArray(); } }
 
-        public IdealPolymerMC()
+        public IdealChainMC()
         {
         }
 
@@ -45,14 +44,14 @@ namespace Avinery.Sim
             return x*x;
         }
 
-        static Vec2d[] InitializeConfiguration(double R, int N, double StepSize)
+        static Vec2d[] InitializeConfiguration(double R, int N)
         {
             var configuration = new Vec2d[N];
 
             if (N % 2 == 0) // even number of monomers (odd number of steps)
             {
-                var yHeight = Math.Sqrt(Sqr(StepSize) - Sqr((R - StepSize) / (N - 2)));
-                var spacing = (R - StepSize) / (N - 2);
+                var yHeight = Math.Sqrt(1.0 - Sqr((R - 1.0) / (N - 2)));
+                var spacing = (R - 1.0) / (N - 2);
                 for (int i = 0; i < (N - 1); i++)
                     configuration[i].x = i * spacing;
 
@@ -63,7 +62,7 @@ namespace Avinery.Sim
             }
             else // odd number of monomers (even number of steps)
             {
-                var yHeight = Math.Sqrt(Sqr(StepSize) - Sqr(R / (N - 1)));
+                var yHeight = Math.Sqrt(1.0 - Sqr(R / (N - 1)));
                 var spacing = R / (N - 1);
                 for (int i = 0; i < N; i++)
                     configuration[i].x = i * spacing;
@@ -83,12 +82,12 @@ namespace Avinery.Sim
 
             // TODO: The code does not work for short chains (N <= 4)
 
-            if (R <= (2.0*StepSize))
+            if (R <= (2.0))
             {
-                var c1 = InitializeConfiguration(2*StepSize, N/2, StepSize);
-                var c2 = InitializeConfiguration(2*StepSize, N - N/2 + 1, StepSize);
+                var c1 = InitializeConfiguration(2.0, N/2);
+                var c2 = InitializeConfiguration(2.0, N - N/2 + 1);
 
-                var pivot = new Vec2d() {x = R*0.5, y = Math.Sqrt(Sqr(2.0*StepSize) - 0.25*R*R)};
+                var pivot = new Vec2d() {x = R*0.5, y = Math.Sqrt(4.0 - 0.25*R*R)};
                 var v = pivot.DirectionVector;
 
                 c1 = c1.Rotate(v.Angle, c1[0]);
@@ -102,7 +101,7 @@ namespace Avinery.Sim
                     _configuration[i + N/2] = c2[i+1];
             }
             else
-                _configuration = InitializeConfiguration(R, N, StepSize);
+                _configuration = InitializeConfiguration(R, N);
         }
 
         private readonly double TwoPi = Math.PI*2.0;
@@ -133,7 +132,7 @@ namespace Avinery.Sim
                     if (IsEdgeMoveLimitedToEnd || _random.NextDouble() < 0.5) // Choose edge
                     {
                         var newPosition = _configuration[N - 2] +
-                                                (new Vec2d() { x = StepSize }).Rotate(_random.NextDouble() * TwoPi);
+                                                (new Vec2d() { x = 1.0 }).Rotate(_random.NextDouble() * TwoPi);
 
                         if (PullForce == 0)
                             _configuration[N - 1] = newPosition;
@@ -149,7 +148,7 @@ namespace Avinery.Sim
                     else
                     {
                         _configuration[0] = _configuration[1] +
-                                            (new Vec2d() { x = StepSize }).Rotate(_random.NextDouble() * TwoPi);
+                                            (new Vec2d() { x = 1.0 }).Rotate(_random.NextDouble() * TwoPi);
                     }
                 }
 
@@ -183,14 +182,14 @@ namespace Avinery.Sim
 
                 // TODO: Handle the case where x > StepSize and x < StepSize * 1.001
 
-                if (x < StepSize)
+                if (x < 1.0)
                 {
-                    var y = Math.Sqrt(Sqr(StepSize) - x*x);
+                    var y = Math.Sqrt(1.0 - x*x);
 
                     var c = _configuration[i + 1].Dot(n);
                     _configuration[i + 1] = _configuration[i] + x*l - Math.Sign((c - c0))*y*n;
                 }
-                else if (x > (StepSize * 1.001))
+                else if (x > (1.001))
                     throw new Exception("Distance between neighbors diverged!");
 
                 return;
