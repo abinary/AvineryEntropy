@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETStandard,Version=v2.1/",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETStandard,Version=v2.1": {},
+    ".NETStandard,Version=v2.1/": {
+      "Avinery.Compression/1.0.0": {
+        "dependencies": {
+          "7ZipC": "1.0.0",
+          "7ZipLZMA_C_DotNetWrapper": "1.0.0"
+        },
+        "runtime": {
+          "Avinery.Compression.dll": {}
+        }
+      },
+      "7ZipLZMA_C_DotNetWrapper/1.0.0": {
+        "dependencies": {
+          "7ZipC": "1.0.0"
+        },
+        "runtime": {
+          "7ZipLZMA_C_DotNetWrapper.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Avinery.Compression/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "7ZipLZMA_C_DotNetWrapper/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
