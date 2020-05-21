@@ -62,6 +62,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BitArray.cs" />
+    <Compile Include="BitHelper.cs" />
+    <Compile Include="BitWriter.cs" />
     <Compile Include="Layout.cs" />
     <Compile Include="LZMA.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
